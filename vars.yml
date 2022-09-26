@@ -1,2 +1,9 @@
-access_key = #key ID
-secret_key = #key secret
+access_key: xxIAxxC6xxA5UxxB7L5Q
+secret_key: dmxxWqbP1kGJKU2xxxxxxxxxxxxxxxxJqdjADTPeR
+
+region: us-east-1
+group_name: WebSG
+key_name: my_aws
+instance_type: t2.micro
+image_ami: ami-05fa00d4c63e32376
+vpc_subnet_id: subnet-0b7a3b2e5a7a91956

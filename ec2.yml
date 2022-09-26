@@ -1,7 +1,7 @@
 - hosts: localhost
-  gather_facts: 'no'
-    vars_files:
-    - vault.ymlk
+  gather_facts: 'yes'
+  vars_files:
+    - vars.yml
   tasks:
     - name:
       pip:
@@ -9,9 +9,9 @@
         state: present
     - name: Creating Security Group for WebServer on AWS
       ec2_group:
-        name: WebSG
+        name: '{{ group_name }}'
         description: Security Group for Web Server allowing port for http and ssh
-        region: us-east-1
+        region: '{{ region }}'
         aws_access_key: '{{ access_key }}'
         aws_secret_key: '{{ secret_key }}'
         rules:
@@ -29,13 +29,13 @@
 
     - name: launching ec2 instance for webserver
       amazon.aws.ec2:
-        key_name: my_aws
-        instance_type: t2.micro
-        image: ami-05fa00d4c63e32376
+        key_name: '{{ key_name }}'
+        instance_type: '{{ instance_type }}'
+        image: '{{ image_ami }}'
         wait: true
-        group: WebSG
+        group: '{{ group_name }}'
         count: 1
-        vpc_subnet_id: subnet-0b7a3b2e5a7a91956
+        vpc_subnet_id: '{{ vpc_subnet_id }}'
         assign_public_ip: 'yes'
         region: us-east-1
         state: present
@@ -50,6 +50,8 @@
         hostname: '{{ item.public_ip }}'
         groupname: webserver
       loop: '{{ ec2.instances }}'
+
+      
     - name: Wait for SSH to come up
       wait_for:
         host: '{{ item.public_dns_name }}'
